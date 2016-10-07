@@ -22,4 +22,10 @@ public class Jugador : MonoBehaviour {
 		if(subditos > 0) --subditos;
 		else print("No tienes subditos");
 	}
+	
+	//Aumenta los puntos al devolver un subdito a la mano
+	public void aumnetaPuntos(int puntuacion) {
+		puntos += puntuacion;
+		++subditos;
+	}
 }
