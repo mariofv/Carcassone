@@ -3,13 +3,5 @@ using System.Collections;
 
 public class GlobalVariables : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+	enum tipoLoseta = { CAMPO, RIO, CAMINO, CIUDAD, CATEDRAL, MONASTERIO};
 }
