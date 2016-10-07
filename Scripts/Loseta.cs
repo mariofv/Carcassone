@@ -14,7 +14,7 @@ public class Loseta : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		ladosLoseta = new int[4];
-		tipoSubdito = -1;
+		tipoSubdito = tipoLoseta.NADA;
 	}
 	
 
