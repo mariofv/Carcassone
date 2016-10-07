@@ -1,19 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LosetaAtributos : MonoBehaviour {
+public class Loseta : MonoBehaviour {
 
 	//Este vector tiene los tipos de cada lado de la ficha
-	private Vector4 lados;
-
+	public int[] ladosLoseta;
+	public tipoLoseta[] tiposEnLoseta;
+	//Donde esta situado el subdito, -1 indica sin subdito.
+	public tipoLoseta tipoSubdito;
+	Subdito subdito;
 
 	// Use this for initialization
 	void Start () {
-		lados = new Vector4();
+		ladosLoseta = new int[4];
+		tipoSubdito = -1;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }
