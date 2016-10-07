@@ -1,14 +1,18 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
-
+Project("{6274B5D8-6AC8-DF82-253B-5A48C53FF26A}") = "Carcassone", "Assembly-CSharp.csproj", "{CC8C261E-DB44-7972-29BD-7484FA1CA4A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-
+		{CC8C261E-DB44-7972-29BD-7484FA1CA4A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC8C261E-DB44-7972-29BD-7484FA1CA4A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC8C261E-DB44-7972-29BD-7484FA1CA4A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC8C261E-DB44-7972-29BD-7484FA1CA4A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
