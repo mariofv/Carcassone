@@ -18,7 +18,7 @@ public class Jugador : MonoBehaviour {
 	}
 	
 	//Si tienes subdito disponible lo resta, sino avisa de ERROR
-	bool ColocaSubdito() {
+	public void ColocaSubdito() {
 		if(subditos > 0) --subditos;
 		else print("No tienes subditos");
 	}

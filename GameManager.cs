@@ -3,8 +3,12 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
-	void Start () {
-	
+	LosetaAtributos[,] board = new LosetaAtributos[72,72];
+
+
+
+	void Start() {
+		
 	}
 
 	void Update () {
