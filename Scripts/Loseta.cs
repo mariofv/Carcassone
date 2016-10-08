@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Loseta : MonoBehaviour {
 
-	private int numeroApariciones;
+	public int numeroApariciones;
 	//Estos vectores tiene los tipos de cada lado de la ficha
 	public int[] ladosLoseta;
 	public tipoLoseta[] tiposEnLoseta;
