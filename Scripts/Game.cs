@@ -98,12 +98,28 @@ public class Game : MonoBehaviour {
 	void gameLoop() {
 		for (int i = 0; i < jugadores.Length; ++i) {
 			Jugador jugador = jugadores [i];
-			foreach (Coord pos in posiblesLosetas) {
-				GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), 50)), Quaternion.identity);
-				LinkedList<int>[]dirs = possibleMovement (loseta.GetComponent<Loseta> (), board [pos.x, pos.y], pos);
+			GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), GlobalVariables.cameraZ)), Quaternion.identity);
+			if (posiblesLosetas == null) {
+				posiblesLosetas = new LinkedList<Coord> ();
+				Coord ini = new Coord ();
+				ini.x = ini.y = numFT;
+				posiblesLosetas.AddLast (ini);
+			}
+			LinkedListNode<Coord> it = posiblesLosetas.First;
+			while (it != posiblesLosetas.Last) {
+				LinkedList<int>[]dir = possibleMovement (loseta.GetComponent<Loseta> (), board [it.Value.x, it.Value.y], it.Value);
 				//TODO: Instanciar highlight en coordenadas determinadas por dirs
 				losetaEscogida = false;
 				while (!losetaEscogida);
+				bool surrounded = true;
+				for (int j = 0; j < dirs.Length; ++j) {
+					if (board [it.Value.x + sumX [j], it.Value.y + sumY [j]] == null) surrounded = false;
+				}
+				if (surrounded) {
+					LinkedListNode<Coord> nodeAEliminar = it;
+					it = it.Next;
+					posiblesLosetas.Remove (nodeAEliminar);
+				}
 			}
 		}
 	}
