@@ -13,7 +13,6 @@ public class MoveCamera : MonoBehaviour
 	
 	private Vector3 mouseOrigin;	// Position of cursor when mouse dragging starts
 	private bool isPanning;		// Is the camera being panned?
-	private bool isRotating;	// Is the camera being rotated?
 	private bool isZooming;		// Is the camera zooming?
 	
 	//
@@ -22,16 +21,9 @@ public class MoveCamera : MonoBehaviour
 	
 	void Update () 
 	{
-		// Get the left mouse button
-		if(Input.GetMouseButtonDown(0))
-		{
-			// Get mouse origin
-			mouseOrigin = Input.mousePosition;
-			isRotating = true;
-		}
 		
 		// Get the right mouse button
-		if(Input.GetMouseButtonDown(1))
+		if(Input.GetMouseButtonDown(0))
 		{
 			// Get mouse origin
 			mouseOrigin = Input.mousePosition;
@@ -47,20 +39,9 @@ public class MoveCamera : MonoBehaviour
 		}
 		
 		// Disable movements on button release
-		if (!Input.GetMouseButton(0)) isRotating=false;
-		if (!Input.GetMouseButton(1)) isPanning=false;
+		if (!Input.GetMouseButton(0)) isPanning=false;
 		if (!Input.GetMouseButton(2)) isZooming=false;
-		
-		// Rotate camera along X and Y axis
-		if (isRotating)
-		{
-	        	Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - mouseOrigin);
 
-			transform.RotateAround(transform.position, transform.right, -pos.y * turnSpeed);
-			transform.RotateAround(transform.position, Vector3.up, pos.x * turnSpeed);
-		}
-		
-		// Move the camera on it's XY plane
 		if (isPanning)
 		{
 	        	Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - mouseOrigin);
