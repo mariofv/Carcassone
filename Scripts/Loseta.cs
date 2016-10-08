@@ -11,11 +11,22 @@ public class Loseta : MonoBehaviour {
 	public tipoLoseta tipoSubdito;
 	//El subdito :D
 	Subdito subdito;
+	//Boton Rotar
+	BotonGirar botonRotar;
+
+
 
 	// Use this for initialization
 	void Start () {
 		ladosLoseta = new int[5];
 		tipoSubdito = tipoLoseta.NADA;
+	}
+
+
+	public void ligaBotonRotar() {
+		botonRotar = new BotonGirar();
+		botonRotar.transform.parent = gameObject.transform;
+	
 	}
 
 	public void rotaFicha(int direccionObservada, int direccionDeseada) {
