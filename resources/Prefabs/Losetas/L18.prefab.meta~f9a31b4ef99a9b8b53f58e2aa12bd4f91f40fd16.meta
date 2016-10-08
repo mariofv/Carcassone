@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:resources/Prefabs/Losetas/L18.prefab.meta~f9a31b4ef99a9b8b53f58e2aa12bd4f91f40fd16.meta
 guid: c555231ba2e62bb448df08fa8279c7b2
 timeCreated: 1475911663
+=======
+guid: 86f6ebf80513a704c96292f66a7acd66
+timeCreated: 1475900091
+>>>>>>> 1ecc2c44c0a669e2ae82baf65fda6414397f7ac0:resources/Prefabs/Losetas/L18.prefab.meta~f9a31b4ef99a9b8b53f58e2aa12bd4f91f40fd16.meta
 licenseType: Free
 DefaultImporter:
   userData: 
