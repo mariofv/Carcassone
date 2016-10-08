@@ -18,7 +18,12 @@ public class MoveCamera : MonoBehaviour
 	//
 	// UPDATE
 	//
-	
+
+	public void centerCamera(GameObject objectClicked) {
+		transform.position = new Vector3(objectClicked.transform.position.x,objectClicked.transform.position.y,transform.position.z);
+
+	}
+
 	void Update () 
 	{
 		

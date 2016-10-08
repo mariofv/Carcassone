@@ -17,18 +17,21 @@ public class UIController : MonoBehaviour {
 		botons[1] = padre.transform.GetChild (3).GetComponent<Button> ();
 		botons[2] = padre.transform.GetChild (4).GetComponent<Button> ();
 		botons[3] = padre.transform.GetChild (5).GetComponent<Button> ();
+		if (Game.jugadores [0] == null) {
+			Game.iniJugadores ();
+		}
 		for (int i = 0; i < 4; ++i) {
 			print(Game.jugadores [i].GetNombre ());
 			botons [i].GetComponentInChildren<Text> ().text =  (Game.jugadores [i].GetNombre ());
 		}
-		GameObject sidebar = gameObject.transform.GetChild(6).gameObject;
+		GameObject sidebar = padre.transform.GetChild(6).gameObject;
 		for (int i = 0; i < 4; ++i) {
 			nomjug[i] = sidebar.transform.GetChild(i).GetChild(2).GetComponent<Text> ();
 			nomjug[i].text = (Game.jugadores[i].GetNombre());
 			nummin[i] = sidebar.transform.GetChild(i).GetChild(1).GetComponent<Text> ();
 			nummin[i].text = ("x" + Game.jugadores[i].GetSubditos());
 		}
-		actualTile = padre.transform.GetChild (7).GetComponent<Image> ();
+		actualTile =  gameObject.transform.parent.gameObject.transform.GetChild (8).GetComponent<Image> ();
 
 
 
@@ -38,11 +41,7 @@ public class UIController : MonoBehaviour {
 	void Update () {
 		
 	}
-<<<<<<< HEAD
-=======
-
-	public static void SetActualTile(Image tile) {
-		actualTile = tile;
+	public static void SetActualTile(Sprite tile) {
+		actualTile.GetComponent<Image>().sprite = tile;
 	}
->>>>>>> e0c0daedb88186b1d91a804f49dca41422a779e7
 }

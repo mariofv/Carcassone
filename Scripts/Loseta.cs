@@ -22,12 +22,7 @@ public class Loseta : MonoBehaviour {
 		escudo = false;
 	}
 		
-	public void ligaBotonRotar() {
-		botonRotar = new BotonGirar();
-		botonRotar.transform.parent = gameObject.transform;
-		botonRotar.losetaLigada = gameObject.GetComponent<Loseta>();
-	
-	}
+
 
 	public void rotaFicha(int direccionObservada, int direccionDeseada) {
 		int grau = Utils.grau (direccionObservada, direccionDeseada);
