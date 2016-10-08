@@ -13,7 +13,7 @@ public class Loseta : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ladosLoseta = new int[4];
+		ladosLoseta = new int[5];
 		tipoSubdito = -1;
 	}
 	
