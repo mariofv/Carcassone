@@ -25,6 +25,8 @@ public class Game : MonoBehaviour {
 	int[] sumX = {0, 1, 0, -1};
 	int[] sumY = { 1, 0, -1, 0 };
 
+	private IEnumerator coroutine;
+
 	void Start () {
 		Camera.main.transform.position = new Vector3 (numFT * 4.52f + 2.26f, numFT * 4.54f + 2.27f, GlobalVariables.cameraZ);
 		for (int i = 0; i < 4; ++i) {
@@ -55,9 +57,8 @@ public class Game : MonoBehaviour {
 				Debug.Break ();
 			}
 		}
-		ultimaLoseta = Instantiate (losetasAColocar.Pop());
-		place (ultimaLoseta, numFT, numFT);
-		StartCoroutine ("gameLoop");
+		coroutine = gameLoop ();
+		StartCoroutine (coroutine);
 	}
 
 
@@ -85,41 +86,45 @@ public class Game : MonoBehaviour {
 				print("Holaa amijo estoy rotando desde " + d + " hasta a " + d2);
 				loseta.rotaFicha((int)d,(int)d2);
 				loseta.rotaFicha((int)d2,(int)d);
-
 			}
 		}
-	
 	}
 		
 	void place(GameObject loseta, int x, int y) {
 		loseta.transform.position =  new Vector3 (x * 4.52f + 2.26f, y*4.54f + 2.27f, 0);
 	}
 
-	void gameLoop() {
+	IEnumerator gameLoop() {
 		for (int i = 0; i < jugadores.Length; ++i) {
 			Jugador jugador = jugadores [i];
-			GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), GlobalVariables.cameraZ)), Quaternion.identity);
+			GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), -GlobalVariables.cameraZ)), Quaternion.identity);
+			LinkedListNode<Coord> coordEscogida = null;
 			if (posiblesLosetas == null) {
 				posiblesLosetas = new LinkedList<Coord> ();
 				Coord ini = new Coord ();
 				ini.x = ini.y = numFT;
 				posiblesLosetas.AddLast (ini);
+				place (loseta, numFT, numFT);
+			} 
+			else {
+				LinkedListNode<Coord> it = posiblesLosetas.First;
+				while (it != posiblesLosetas.Last) {
+					LinkedList<int>[] dir = possibleMovement (loseta.GetComponent<Loseta> (), board [it.Value.x, it.Value.y], it.Value);
+					//TODO: Instanciar highlight en coordenadas determinadas por dirs
+				}
 			}
-			LinkedListNode<Coord> it = posiblesLosetas.First;
-			while (it != posiblesLosetas.Last) {
-				LinkedList<int>[]dir = possibleMovement (loseta.GetComponent<Loseta> (), board [it.Value.x, it.Value.y], it.Value);
-				//TODO: Instanciar highlight en coordenadas determinadas por dirs
-				losetaEscogida = false;
-				while (!losetaEscogida);
-				bool surrounded = true;
-				for (int j = 0; j < dirs.Length; ++j) {
-					if (board [it.Value.x + sumX [j], it.Value.y + sumY [j]] == null) surrounded = false;
-				}
-				if (surrounded) {
-					LinkedListNode<Coord> nodeAEliminar = it;
-					it = it.Next;
-					posiblesLosetas.Remove (nodeAEliminar);
-				}
+			losetaEscogida = false;
+			while (!losetaEscogida) {
+				yield return true;
+				print ("hola");
+			}
+			print (losetaEscogida);
+			bool surrounded = true;
+			for (int j = 0; j < dirs.Length; ++j) {
+				if (board [coordEscogida.Value.x + sumX [j], coordEscogida.Value.y + sumY [j]] == null) surrounded = false;
+			}
+			if (surrounded) {
+				posiblesLosetas.Remove (coordEscogida);
 			}
 		}
 	}
