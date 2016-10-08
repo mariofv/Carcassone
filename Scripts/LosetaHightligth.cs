@@ -7,43 +7,113 @@ public class LosetaHightligth : MonoBehaviour {
 	public GameObject aceptar;
 	public GameObject cancelar;
 	public GameObject rotar;
-	int x = 0, y = 0;
+	public GameObject ciudad;
+	public GameObject camino;
+	public GameObject monasterio;
+	public GameObject nada;
 
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	} 
+	public GameObject aceptarI;
+	public GameObject cancelarI;
+	public GameObject rotarI;
+	public GameObject ciudadI;
+	public GameObject caminoI;
+	public GameObject monasterioI;
+	public GameObject nadaI;
+
+	public int x = 0, y = 0;
+	public Loseta loseta;
+
+	struct Pair {
+		public int first, second;
+		public Pair(int first, int second) {
+			this.first = first;
+			this.second = second;
+		}
+	};
 
 	public void Aceptar() {
 		Game.selectedX = x;
 		Game.selectedY = y;
+		bool[] visitado = new bool[10];
+		for (int i = 0; i < 10; ++i) visitado [i] = false;
+		foreach (tipoLoseta tipo in loseta.tiposEnLoseta) {
+			if (tipo == tipoLoseta.CIUDAD && !visitado [(int)tipo]) {
+				visitado [(int)tipo] = true;
+				ciudadI = (GameObject)Instantiate (ciudad, new Vector3 (transform.position.x + 5f, transform.position.y - 3f, 0), Quaternion.identity);
+				ciudadI.GetComponent<BotonCiudad> ().parent = this;
+			} 
+			else if (tipo == tipoLoseta.CAMINO && !visitado [(int)tipo]) {
+				visitado [(int)tipo] = true;
+				caminoI = (GameObject)Instantiate (camino, new Vector3 (transform.position.x + 5f, transform.position.y - 1.5f, 0), Quaternion.identity);
+				caminoI.GetComponent<BotonCamino> ().parent = this;
+			} 
+			else if (tipo == tipoLoseta.MONASTERIO && !visitado [(int)tipo]) {
+				visitado [(int)tipo] = true;
+				monasterioI = (GameObject)Instantiate (monasterio, new Vector3 (transform.position.x + 5f, transform.position.y - 1f, 0), Quaternion.identity);
+				monasterioI.GetComponent<BotonMonasterio> ().parent = this;
+			}
+		}
+		nadaI = (GameObject)Instantiate (nada, new Vector3 (transform.position.x + 5f, transform.position.y + 0.5f, 0), Quaternion.identity);
+		nadaI.GetComponent<BotonNada> ().parent = this;
+	}
+
+	public void SeleccionarCiudad() {
+		Game.tipoSeleccionado = tipoLoseta.CIUDAD;
+		destroyAll ();
 		Game.losetaEscogida = true;
 	}
 
-	public void Cancelar() {
-		//DESTRUIR HIJOS
+	public void SeleccionarCamino() {
+		Game.tipoSeleccionado = tipoLoseta.CAMINO;
+		destroyAll ();
+		Game.losetaEscogida = true;
 	}
 
+	public void SeleccionarMonasterio() {
+		Game.tipoSeleccionado = tipoLoseta.MONASTERIO;
+		destroyAll ();
+		Game.losetaEscogida = true;
+	}
+
+	public void SeleccionarNada() {
+		Game.tipoSeleccionado = tipoLoseta.NADA;
+		destroyAll ();
+		Game.losetaEscogida = true;
+	}
+
+	void destroyAll() {
+		Destroy(aceptarI);
+		Destroy(cancelarI);
+		Destroy(rotarI);
+		Destroy(ciudadI);
+		Destroy(caminoI);
+		Destroy(monasterioI);
+		Destroy(nadaI);
+	}
+
+	public void Cancelar() {
+		loseta.transform.position = new Vector3 (0, 0, -100);
+		destroyAll ();
+		clicked = false;
+	}
+	bool clicked = false;
 	public void OnMouseUp() {
-		// rot1, rot2 que es la rotación para poner poner en loseta.rota, tipoSeleccionado que es donde el jugador pone el subdito.
-
-
-		ligaBotones ();
-		gameObject.GetComponent<SpriteRenderer> ().sprite = UIController.actualTile.sprite;
-		Camera.main.GetComponent<MoveCamera>().centerCamera (gameObject);
+		if (!clicked) {
+			clicked = true;
+			ligaBotones ();
+			Game.place (loseta.gameObject, x, y);
+			Camera.main.GetComponent<MoveCamera> ().centerCamera (gameObject);
+		}
 
 	}
 
 	private void ligaBotones() {
-		aceptar = (GameObject)Instantiate (aceptar.gameObject, new Vector3 (transform.position.x - 2, transform.position.y - 3.5f, 0), Quaternion.identity);
-		aceptar.GetComponent<BotonAceptar> ().SetPadre (this);
+		aceptarI = (GameObject)Instantiate (aceptar, new Vector3 (transform.position.x - 2, transform.position.y - 3.5f, 0), Quaternion.identity);
+		aceptarI.GetComponent<BotonAceptar> ().SetPadre (this);
 
-		cancelar = (GameObject)Instantiate (cancelar.gameObject, new Vector3 (transform.position.x - 0, transform.position.y - 3.5f, 0), Quaternion.identity);
-		rotar = (GameObject)Instantiate (rotar.gameObject, new Vector3 (transform.position.x + 2, transform.position.y - 3.5f, 0), Quaternion.identity);
-
+		cancelarI = (GameObject)Instantiate (cancelar, new Vector3 (transform.position.x - 0, transform.position.y - 3.5f, 0), Quaternion.identity);
+		cancelarI.GetComponent<BotonCancelar> ().SetLosetaPadre (this);
+		rotarI = (GameObject)Instantiate (rotar, new Vector3 (transform.position.x + 2, transform.position.y - 3.5f, 0), Quaternion.identity);
+		rotarI.GetComponent<BotonGirar> ().losetaLigada = loseta;
 	}
 }

@@ -21,7 +21,6 @@ public class UIController : MonoBehaviour {
 			Game.iniJugadores ();
 		}
 		for (int i = 0; i < 4; ++i) {
-			print(Game.jugadores [i].GetNombre ());
 			botons [i].GetComponentInChildren<Text> ().text =  (Game.jugadores [i].GetNombre ());
 		}
 		GameObject sidebar = padre.transform.GetChild(6).gameObject;

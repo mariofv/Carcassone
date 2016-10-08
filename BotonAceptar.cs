@@ -3,10 +3,12 @@ using System.Collections;
 
 public class BotonAceptar:Boton {
 	public LosetaHightligth losetapadre;
-
+	bool clicked = false;
 	public void OnMouseUp() {
-
-		losetapadre.Aceptar ();
+		if (!clicked) {
+			clicked = true;
+			losetapadre.Aceptar ();
+		}
 
 	}
 

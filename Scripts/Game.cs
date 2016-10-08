@@ -103,7 +103,7 @@ public class Game : MonoBehaviour {
 		return rot;
 	}
 		
-	void place(GameObject loseta, int x, int y) {
+	public static void place(GameObject loseta, int x, int y) {
 		loseta.transform.position =  new Vector3 (x * 4.52f + 2.26f, y*4.54f + 2.27f, 0);
 	}
 
@@ -138,7 +138,7 @@ public class Game : MonoBehaviour {
 	}
 
 	public static int selectedX, selectedY;
-	public static int rot1, rot2;
+	public static int rot;
 	public static tipoLoseta tipoSeleccionado;
 
 	IEnumerator gameLoop() {
@@ -146,15 +146,21 @@ public class Game : MonoBehaviour {
 			for (int i = 0; i < jugadores.Length; ++i) {
 				Jugador jugador = jugadores [i];
 				GameObject loseta = losetasAColocar.Pop ();
+				loseta = (GameObject)Instantiate (loseta, new Vector3 (0, 0, -100), Quaternion.identity);
+				yield return null;
+				Loseta losetaClass = loseta.GetComponent<Loseta> ();
 				UIController.SetActualTile(loseta.gameObject.GetComponent<SpriteRenderer> ().sprite);
 				if (primeraRonda) {
 					primeraRonda = false;
 					GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
-					LosetaHightligth losetaHighlight = highlight.GetComponent<LosetaHightligth> ();
+					GameObject instance = Instantiate (highlight);
+					LosetaHightligth losetaHighlight = instance.GetComponent<LosetaHightligth> ();
+					losetaHighlight.loseta = losetaClass;
+					losetaHighlight.x = numFT;
+					losetaHighlight.y = numFT;
 					losetaHighlight.validRot = new bool[4];
 					for (int j = 0; j < 4; ++j)
 						losetaHighlight.validRot [j] = true;	
-					GameObject instance = Instantiate (highlight);
 					place (instance, numFT, numFT);
 				} else {
 					for (int j = 0; j < sizeX; ++j) {
@@ -165,9 +171,12 @@ public class Game : MonoBehaviour {
 								++l; 
 							if (l < 4) {
 								GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
-								LosetaHightligth losetaHighlight = highlight.GetComponent<LosetaHightligth> ();
-								losetaHighlight.validRot = rotValidas;
 								GameObject instance = Instantiate (highlight);
+								LosetaHightligth losetaHighlight = instance.GetComponent<LosetaHightligth> ();
+								losetaHighlight.validRot = rotValidas;
+								losetaHighlight.loseta = losetaClass;
+								losetaHighlight.x = j;
+								losetaHighlight.y = k;
 								place (instance, j, k);
 							}
 						}
@@ -180,8 +189,7 @@ public class Game : MonoBehaviour {
 
 				Coord selected = new Coord (selectedX, selectedY);
 				GameObject losetaInstancia = Instantiate (loseta);
-				place (losetaInstancia, selectedX, selectedY);
-				losetaInstancia.GetComponent<Loseta> ().rotaFicha (rot1, rot2);
+				board [selected.x, selected.y] = loseta.GetComponent<Loseta> ();
 				if (tipoSeleccionado == tipoLoseta.NADA) {
 					print ("nada");
 				} else if (tipoSeleccionado == tipoLoseta.CATEDRAL) {
@@ -200,7 +208,7 @@ public class Game : MonoBehaviour {
 					Loseta losetaSelected = board [selected.x, selected.y];
 					bool[] visited = new bool[losetaSelected.tiposEnLoseta.Length];
 					for (int j = 0; j < visited.Length; ++i)
-						visited [i] = false;
+						visited [j] = false;
 					foreach (direcciones dir in dirs) {
 						if (losetaSelected.tiposEnLoseta [losetaSelected.ladosLoseta [(int)dir]] == tipoSeleccionado &&
 						    !visited [losetaSelected.ladosLoseta [(int)dir]]) {

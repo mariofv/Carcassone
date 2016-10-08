@@ -3,11 +3,12 @@ using System.Collections;
 
 public class BotonCancelar:Boton {
 	public LosetaHightligth losetaPadre;
-	// Use this for initialization
+	bool clicked = false;
 	void  OnMouseUp() {
-
-		losetaPadre.Cancelar ();
-
+		if (!clicked) {
+			clicked = true;
+			losetaPadre.Cancelar ();
+		}
 	}
 
 	public void SetLosetaPadre(LosetaHightligth loseta) {
