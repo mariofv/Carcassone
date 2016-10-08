@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BotonCerrar : Boton {
 	
-	void OnMouseDown() {
+	public void cerrar() {
 		Application.Quit();		
 	}
 	
