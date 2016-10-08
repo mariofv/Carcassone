@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Subdito : MonoBehaviour {
 	
-	public jugador jugador;
+	public Jugador jugador;
 	// Use this for initialization
 	void Start () {
 	
@@ -15,7 +15,7 @@ public class Subdito : MonoBehaviour {
 	}
 	
 	//Debuelve el subdito a la mano y aumenta los puntos necesarios
-	public void vuelveMano(int puntuacion){
-		jugador.aumentaPuntos(putuacion);
+	public void vuelveMano(int puntuacion) {
+		jugador.aumentaPuntos(puntuacion);
 	}
 }

@@ -24,7 +24,7 @@ public class Jugador : MonoBehaviour {
 	}
 	
 	//Aumenta los puntos al devolver un subdito a la mano
-	public void aumnetaPuntos(int puntuacion) {
+	public void aumentaPuntos(int puntuacion) {
 		puntos += puntuacion;
 		++subditos;
 	}

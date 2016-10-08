@@ -13,8 +13,8 @@ public class Loseta : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ladosLoseta = new int[5];
-		tipoSubdito = -1;
+		ladosLoseta = new int[4];
+		tipoSubdito = tipoLoseta.NADA;
 	}
 	
 
