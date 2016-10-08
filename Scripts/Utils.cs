@@ -12,7 +12,7 @@ public class Utils : MonoBehaviour {
 	void Update () {
 	}
 
-	public int grau (int i, int j) {
+	public static int grau (int i, int j) {
 		if(i > j) return (i-j)*90;
 		else if (i < j) return (j-i)*(-90);
 		return 0;
