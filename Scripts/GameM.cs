@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Game : MonoBehaviour {
+public class GameM : MonoBehaviour {
 
 	struct Coord {
 		public int x, y;
@@ -21,6 +21,7 @@ public class Game : MonoBehaviour {
 
 
 	void Start () {
+		print ("Hola");
 		Camera.main.transform.position = new Vector3 (numF * 4.52f + 2.26f, numF * 4.54f + 2.27f, -60);
 		for (int i = 0; i < 4; ++i) {
 			Jugador jugador = gameObject.AddComponent<Jugador> ();
