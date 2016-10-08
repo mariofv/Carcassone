@@ -13,16 +13,15 @@ public class Loseta : MonoBehaviour {
 	public Subdito subdito;
 	//Boton Rotar
 	BotonGirar botonRotar;
-
-
+	public bool escudo;
 
 	// Use this for initialization
 	void Start () {
 		ladosLoseta = new int[5];
 		tipoSubdito = tipoLoseta.NADA;
+		escudo = false;
 	}
-
-
+		
 	public void ligaBotonRotar() {
 		botonRotar = new BotonGirar();
 		botonRotar.transform.parent = gameObject.transform;
