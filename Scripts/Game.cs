@@ -65,7 +65,8 @@ public class Game : MonoBehaviour {
 			foreach (direcciones d2 in dir) {
 				print("Holaa amijo estoy rotando desde " + d + " hasta a " + d2);
 				loseta.rotaFicha((int)d,(int)d2);
-				Debug.Break();
+				while (true)
+					;
 				loseta.rotaFicha((int)d2,(int)d);
 
 			}
