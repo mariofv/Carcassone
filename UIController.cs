@@ -17,6 +17,9 @@ public class UIController : MonoBehaviour {
 		botons[1] = padre.transform.GetChild (3).GetComponent<Button> ();
 		botons[2] = padre.transform.GetChild (4).GetComponent<Button> ();
 		botons[3] = padre.transform.GetChild (5).GetComponent<Button> ();
+		if (Game.jugadores [0] == null) {
+			Game.iniJugadores ();
+		}
 		for (int i = 0; i < 4; ++i) {
 			print(Game.jugadores [i].GetNombre ());
 			botons [i].GetComponentInChildren<Text> ().text =  (Game.jugadores [i].GetNombre ());
@@ -38,11 +41,7 @@ public class UIController : MonoBehaviour {
 	void Update () {
 		
 	}
-<<<<<<< HEAD
-=======
-
 	public static void SetActualTile(Image tile) {
 		actualTile = tile;
 	}
->>>>>>> e0c0daedb88186b1d91a804f49dca41422a779e7
 }

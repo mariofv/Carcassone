@@ -33,13 +33,24 @@ public class Game : MonoBehaviour {
 
 	private IEnumerator coroutine;
 
-	void Start () {
-		Camera.main.transform.position = new Vector3 (numFT * 4.52f + 2.26f, numFT * 4.54f + 2.27f, GlobalVariables.cameraZ);
+	public static void iniJugadores() {
 		for (int i = 0; i < 4; ++i) {
-			Jugador jugador = gameObject.AddComponent<Jugador> ();
+			Jugador jugador = new Jugador();
 			jugador.puntos = 0;
 			jugador.subditos = 8;
 			jugadores [i] = jugador;
+		}
+	}
+
+	void Start () {
+		Camera.main.transform.position = new Vector3 (numFT * 4.52f + 2.26f, numFT * 4.54f + 2.27f, GlobalVariables.cameraZ);
+		if (jugadores [0] == null) {
+			for (int i = 0; i < 4; ++i) {
+				Jugador jugador = new Jugador ();
+				jugador.puntos = 0;
+				jugador.subditos = 8;
+				jugadores [i] = jugador;
+			}
 		}
 		List<int> prueba = new List<int>(numF);
 		for (int i = 0; i < numF; ++i) {
@@ -99,11 +110,12 @@ public class Game : MonoBehaviour {
 	bool[,] visitado = new bool[sizeX, sizeY];
 	int[] subditosJugador = new int[4];
 	int puntuacion;
-	int ciudadEscudo;
+	int profMax;
 
-	bool analisis(Coord coord, tipoLoseta tipo, direcciones dirAnterior) {
+	bool analisis(Coord coord, tipoLoseta tipo, direcciones dirAnterior, int profundidad) {
 		Loseta loseta = board [coord.x, coord.y];
 		if (loseta == null) return false;
+		profMax = (profMax < profundidad ? profundidad : profMax);
 		int lado = loseta.ladosLoseta [Utils.opuesto((int)dirAnterior)];
 		tipoLoseta[] tipos = loseta.tiposEnLoseta;
 		foreach (direcciones dir in dirs) {
@@ -111,7 +123,7 @@ public class Game : MonoBehaviour {
 				if (!visitado[next.x, next.y] &&
 				tipos[loseta.ladosLoseta[(int)dir]] == tipo && 
 				loseta.ladosLoseta[(int)dir] != lado) {
-					if (!analisis(next, tipo, dir)) return false;
+				if (!analisis(next, tipo, dir, profundidad+1)) return false;
 				}
 		}
 		if (loseta.tipoSubdito == tipo) {
@@ -120,83 +132,106 @@ public class Game : MonoBehaviour {
 		if (tipo == tipoLoseta.CAMINO) ++puntuacion;
 		else {
 			puntuacion += 2;
-			//TODO: si es escudo contar más
+			if (loseta.escudo) ++puntuacion;
 		}
 		return true;
 	}
 
+	public int selectedX, selectedY;
+	public int rot1, rot2;
+	public tipoLoseta tipoSeleccionado;
+
 	IEnumerator gameLoop() {
-		for (int i = 0; i < jugadores.Length; ++i) {
-			Jugador jugador = jugadores [i];
-			GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), -GlobalVariables.cameraZ)), Quaternion.identity);
-			if (primeraRonda) {
-				primeraRonda = false;
-				GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
-				LosetaHightligth losetaHighlight = highlight.GetComponent<LosetaHightligth> ();
-				losetaHighlight.validRot = new bool[4];
-				for (int j = 0; j < 4; ++j) losetaHighlight.validRot[j] = true;	
-				GameObject instance = Instantiate (highlight);
-				place (instance, numFT, numFT);
-			} 
-			else {
-				for (int j = 0; j < sizeX; ++j) {
-					for (int k = 0; k < sizeY; ++k) {
-						bool[] rotValidas = posicionPosible (loseta.GetComponent<Loseta> (), new Coord (j, k));
-						int l = 0;
-						while (l < 4 && !rotValidas [l]) ++l; 
-						if (l < 4) {
-							GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
-							LosetaHightligth losetaHighlight = highlight.GetComponent<LosetaHightligth> ();
-							losetaHighlight.validRot = rotValidas;
-							GameObject instance = Instantiate (highlight);
-							place (instance, j, k);
+		while (losetasAColocar.Count > 0) {
+			for (int i = 0; i < jugadores.Length; ++i) {
+				Jugador jugador = jugadores [i];
+				GameObject loseta = losetasAColocar.Pop ();
+				if (primeraRonda) {
+					primeraRonda = false;
+					GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
+					LosetaHightligth losetaHighlight = highlight.GetComponent<LosetaHightligth> ();
+					losetaHighlight.validRot = new bool[4];
+					for (int j = 0; j < 4; ++j)
+						losetaHighlight.validRot [j] = true;	
+					GameObject instance = Instantiate (highlight);
+					place (instance, numFT, numFT);
+				} else {
+					for (int j = 0; j < sizeX; ++j) {
+						for (int k = 0; k < sizeY; ++k) {
+							bool[] rotValidas = posicionPosible (loseta.GetComponent<Loseta> (), new Coord (j, k));
+							int l = 0;
+							while (l < 4 && !rotValidas [l])
+								++l; 
+							if (l < 4) {
+								GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
+								LosetaHightligth losetaHighlight = highlight.GetComponent<LosetaHightligth> ();
+								losetaHighlight.validRot = rotValidas;
+								GameObject instance = Instantiate (highlight);
+								place (instance, j, k);
+							}
 						}
 					}
 				}
-			}
-			losetaEscogida = false;
-			while (!losetaEscogida) {
-				yield return true;
-			}
+				losetaEscogida = false;
+				while (!losetaEscogida) {
+					yield return true;
+				}
 
-			Coord selected = new Coord (0, 0);
-			tipoLoseta tipoSeleccionado = tipoLoseta.CIUDAD;
-			Loseta losetaSelected = board [selected.x, selected.y];
-			bool[] visited = new bool[losetaSelected.tiposEnLoseta.Length];
-			for (int j = 0; j < visited.Length; ++i) visited[i] = false;
-			foreach (direcciones dir in dirs) {
-				if (losetaSelected.tiposEnLoseta [losetaSelected.ladosLoseta [(int)dir]] == tipoSeleccionado &&
-				    !visited [losetaSelected.ladosLoseta [(int)dir]]) {
-					visited[losetaSelected.ladosLoseta[(int)dir]] = true;
-					for (int j = 0; j < sizeX; ++j)
-						for (int k = 0; k < sizeY; ++k)
-							visitado [j, k] = false;
-					for (int j = 0; j < subditosJugador.Length; ++j)
-						subditosJugador [j] = 0;
-					ciudadEscudo = 0;
-					if (analisis (new Coord (selected.x + sumX [(int)dir], selected.y + sumY [(int)dir]), tipoSeleccionado, dir)) {
-						int max = -1;
-						LinkedList<int> maximos;
-						for (int j = 0; j < 4; ++j) {
-							if (subditosJugador [j] > subditosJugador [max]) {
-								max = j;
-								maximos = new LinkedList<int> ();
-								maximos.AddLast (max);
-							} 
-							else if (subditosJugador [j] == subditosJugador [max]) {
-								maximos.AddLast (max);
+				Coord selected = new Coord (selectedX, selectedY);
+				GameObject losetaInstancia = Instantiate (loseta);
+				place (losetaInstancia, selectedX, selectedY);
+				losetaInstancia.GetComponent<Loseta> ().rotaFicha (rot1, rot2);
+				if (tipoSeleccionado == tipoLoseta.NADA) {
+					print ("nada");
+				} else if (tipoSeleccionado == tipoLoseta.CATEDRAL) {
+					int count = 0;
+					for (int j = selected.x - 1; j < selected.x + 1; ++j) {
+						for (int k = selected.y - 1; k < selected.y + 1; ++k) {
+							if (j != selected.x && k != selected.y) {
+								if (board [j, k] != null)
+									++count;
 							}
 						}
-						foreach (int player in maximos) {
-							jugadores [player].puntos += puntuacion;
+					}
+					if (count == 8)
+						jugador.puntos += 9;
+				} else {
+					Loseta losetaSelected = board [selected.x, selected.y];
+					bool[] visited = new bool[losetaSelected.tiposEnLoseta.Length];
+					for (int j = 0; j < visited.Length; ++i)
+						visited [i] = false;
+					foreach (direcciones dir in dirs) {
+						if (losetaSelected.tiposEnLoseta [losetaSelected.ladosLoseta [(int)dir]] == tipoSeleccionado &&
+						    !visited [losetaSelected.ladosLoseta [(int)dir]]) {
+							visited [losetaSelected.ladosLoseta [(int)dir]] = true;
+							for (int j = 0; j < sizeX; ++j)
+								for (int k = 0; k < sizeY; ++k)
+									visitado [j, k] = false;
+							for (int j = 0; j < subditosJugador.Length; ++j)
+								subditosJugador [j] = 0;
+							if (analisis (new Coord (selected.x + sumX [(int)dir], selected.y + sumY [(int)dir]), tipoSeleccionado, dir, 0)) {
+								int max = -1;
+								LinkedList<int> maximos = null;
+								for (int j = 0; j < 4; ++j) {
+									if (subditosJugador [j] > subditosJugador [max]) {
+										max = j;
+										maximos = new LinkedList<int> ();
+										maximos.AddLast (max);
+									} else if (subditosJugador [j] == subditosJugador [max]) {
+										maximos.AddLast (max);
+									}
+								}
+								if (tipoSeleccionado == tipoLoseta.CIUDAD && profMax == 0)
+									puntuacion = 2;
+								foreach (int player in maximos) {
+									jugadores [player].puntos += puntuacion;
+								}
+							}
 						}
 					}
 				}
 			}
 		}
-	}
-		
-
-	void Update () {
+		//TODO: terminar juego
 	}
 }
