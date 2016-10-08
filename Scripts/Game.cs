@@ -188,7 +188,6 @@ public class Game : MonoBehaviour {
 				}
 
 				Coord selected = new Coord (selectedX, selectedY);
-				GameObject losetaInstancia = Instantiate (loseta);
 				board [selected.x, selected.y] = loseta.GetComponent<Loseta> ();
 				if (tipoSeleccionado == tipoLoseta.NADA) {
 					print ("nada");

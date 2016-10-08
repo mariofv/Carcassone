@@ -61,24 +61,28 @@ public class LosetaHightligth : MonoBehaviour {
 		Game.tipoSeleccionado = tipoLoseta.CIUDAD;
 		destroyAll ();
 		Game.losetaEscogida = true;
+		Destroy (gameObject);
 	}
 
 	public void SeleccionarCamino() {
 		Game.tipoSeleccionado = tipoLoseta.CAMINO;
 		destroyAll ();
 		Game.losetaEscogida = true;
+		Destroy (gameObject);
 	}
 
 	public void SeleccionarMonasterio() {
 		Game.tipoSeleccionado = tipoLoseta.MONASTERIO;
 		destroyAll ();
 		Game.losetaEscogida = true;
+		Destroy (gameObject);
 	}
 
 	public void SeleccionarNada() {
 		Game.tipoSeleccionado = tipoLoseta.NADA;
 		destroyAll ();
 		Game.losetaEscogida = true;
+		Destroy (gameObject);
 	}
 
 	void destroyAll() {
