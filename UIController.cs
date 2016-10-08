@@ -24,14 +24,14 @@ public class UIController : MonoBehaviour {
 			print(Game.jugadores [i].GetNombre ());
 			botons [i].GetComponentInChildren<Text> ().text =  (Game.jugadores [i].GetNombre ());
 		}
-		GameObject sidebar = gameObject.transform.GetChild(6).gameObject;
+		GameObject sidebar = padre.transform.GetChild(6).gameObject;
 		for (int i = 0; i < 4; ++i) {
 			nomjug[i] = sidebar.transform.GetChild(i).GetChild(2).GetComponent<Text> ();
 			nomjug[i].text = (Game.jugadores[i].GetNombre());
 			nummin[i] = sidebar.transform.GetChild(i).GetChild(1).GetComponent<Text> ();
 			nummin[i].text = ("x" + Game.jugadores[i].GetSubditos());
 		}
-		actualTile = padre.transform.GetChild (7).GetComponent<Image> ();
+		actualTile =  gameObject.transform.parent.gameObject.transform.GetChild (8).GetComponent<Image> ();
 
 
 
@@ -41,7 +41,7 @@ public class UIController : MonoBehaviour {
 	void Update () {
 		
 	}
-	public static void SetActualTile(Image tile) {
-		actualTile = tile;
+	public static void SetActualTile(Sprite tile) {
+		actualTile.GetComponent<Image>().sprite = tile;
 	}
 }

@@ -137,15 +137,16 @@ public class Game : MonoBehaviour {
 		return true;
 	}
 
-	public int selectedX, selectedY;
-	public int rot1, rot2;
-	public tipoLoseta tipoSeleccionado;
+	public static int selectedX, selectedY;
+	public static int rot1, rot2;
+	public static tipoLoseta tipoSeleccionado;
 
 	IEnumerator gameLoop() {
 		while (losetasAColocar.Count > 0) {
 			for (int i = 0; i < jugadores.Length; ++i) {
 				Jugador jugador = jugadores [i];
 				GameObject loseta = losetasAColocar.Pop ();
+				UIController.SetActualTile(loseta.gameObject.GetComponent<SpriteRenderer> ().sprite);
 				if (primeraRonda) {
 					primeraRonda = false;
 					GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
@@ -174,7 +175,7 @@ public class Game : MonoBehaviour {
 				}
 				losetaEscogida = false;
 				while (!losetaEscogida) {
-					yield return true;
+					yield return null;
 				}
 
 				Coord selected = new Coord (selectedX, selectedY);
