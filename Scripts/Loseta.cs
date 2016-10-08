@@ -14,8 +14,16 @@ public class Loseta : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ladosLoseta = new int[4];
+		ladosLoseta = new int[5];
 		tipoSubdito = tipoLoseta.NADA;
+	}
+
+	public void rotaLoseta(int direccionObservada, int direccionObjetivo) {
+		this.gameObject.transform.Rotate (0, 0, angulo);
+		switch (angulo) {
+			
+		}
+
 	}
 	
 
