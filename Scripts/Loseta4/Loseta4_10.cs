@@ -5,8 +5,8 @@ public class Loseta4_10 : Loseta {
 
 	// Use this for initialization
 	void Start () {
-		tiposEnLoseta = new tipoLoseta[] {tipoLoseta.CAMINO,tipoLoseta.CAMPO,tipoLoseta.CIUDAD};
-		ladosLoseta = new int[] {0,1,2,1,0};
+		tiposEnLoseta = new tipoLoseta[] {tipoLoseta.CAMINO,tipoLoseta.CAMPO,tipoLoseta.CIUDAD,tipoLoseta.CAMPO};
+		ladosLoseta = new int[] {0,1,2,3,0};
 
 	}
 	
