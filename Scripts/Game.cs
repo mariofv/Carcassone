@@ -6,12 +6,18 @@ public class Game : MonoBehaviour {
 	
 	struct Coord {
 		public int x, y;
+		public Coord(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
 	};
 	bool losetaEscogida;
 	const int numF = 34;
 	const int numFT = 84;
+	const int sizeX = numFT * 2;
+	const int sizeY = numFT * 2;
 
-	Loseta[,] board = new Loseta[2*numFT, 2*numFT];
+	Loseta[,] board = new Loseta[sizeX, sizeY];
 
 	Jugador[] jugadores = new Jugador[4];
 
@@ -62,22 +68,50 @@ public class Game : MonoBehaviour {
 	}
 
 
-	LinkedList<int>[] possibleMovement(Loseta origen, Loseta adyacente, Coord cDest) {
+	bool[,] possibleMovement(Loseta origen, Loseta adyacente, Coord cDest) {
 		tipoLoseta[] tiposDest = adyacente.tiposEnLoseta;
 		tipoLoseta[] tiposOr = origen.tiposEnLoseta;
-		LinkedList<int>[] possiblePairs = new LinkedList<int>[dirs.Length];
+		bool[,] possiblePairs = new bool[dirs.Length, dirs.Length];
+		for (int i = 0; i < dirs.Length; ++i)
+			for (int j = 0; j < dirs.Length; ++j)
+				possiblePairs [i, j] = false;
 		foreach (direcciones dDest in dirs) {
 			if (board [cDest.x + sumX [(int)dDest], cDest.y + sumY [(int)dDest]] == null) {
 				tipoLoseta tipoDest = tiposDest [adyacente.ladosLoseta [(int)dDest]];
 				foreach (direcciones dOr in dirs) {
 					tipoLoseta tipoOr = tiposOr [origen.ladosLoseta [(int)dOr]];
 					if (tipoDest == tipoOr) {
-						possiblePairs[(int)dDest].AddLast ((int)dOr);
+						possiblePairs [(int)dDest, (int)dOr] = true;
 					}
 				}
 			}
 		}
 		return possiblePairs;
+	}
+
+	bool[] posicionPosible(Loseta losetaAColocar, Coord coord) {
+		tipoLoseta[] tiposLoseta = losetaAColocar.tiposEnLoseta;
+		bool[] rot = new bool[4];
+		for (int i = 0; i < 4; ++i) {
+			rot[i] = false;
+			losetaAColocar.rotaFicha (0, i);
+			foreach (direcciones dir in dirs) {
+				tipoLoseta tipoLoseta = tiposLoseta [losetaAColocar.ladosLoseta [(int)dir]];
+				Coord adyacente = new Coord ();
+				adyacente.x = coord.x + sumX [(int)dir];
+				adyacente.y = coord.y + sumY [(int)dir];
+				if (adyacente.x >= 0 && adyacente.x < sizeX && adyacente.y >= 0 && adyacente.y < sizeY) {
+					Loseta loseta = board [adyacente.x, adyacente.y];
+					if (loseta != null) {
+						tipoLoseta tipoAdyacente = loseta.tiposEnLoseta[loseta.ladosLoseta [Utils.opuesto ((int)dir)]];
+						if (tipoAdyacente == tipoLoseta) {
+							rot[i] = true;
+						}
+					}
+				}
+			}
+		}
+		return rot;
 	}
 
 	void pruebaRotar(Loseta loseta) {
@@ -107,10 +141,19 @@ public class Game : MonoBehaviour {
 				place (loseta, numFT, numFT);
 			} 
 			else {
-				LinkedListNode<Coord> it = posiblesLosetas.First;
-				while (it != posiblesLosetas.Last) {
-					LinkedList<int>[] dir = possibleMovement (loseta.GetComponent<Loseta> (), board [it.Value.x, it.Value.y], it.Value);
-					//TODO: Instanciar highlight en coordenadas determinadas por dirs
+				for (int j = 0; j < sizeX; ++j) {
+					for (int k = 0; k < sizeY; ++k) {
+						bool[] rotValidas = posicionPosible (loseta.GetComponent<Loseta> (), new Coord (j, k));
+						int l = 0;
+						while (l < 4 && !rotValidas [l]) ++l; 
+						if (l < 4) {
+							GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
+							LosetaHightligth losetaHighlight = highlight.GetComponent<LosetaHightligth> ();
+							losetaHighlight.validRot = rotValidas;
+							GameObject instance = Instantiate (highlight);
+							place (instance, j, k);
+						}
+					}
 				}
 			}
 			losetaEscogida = false;
