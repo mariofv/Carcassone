@@ -9,8 +9,9 @@ public class Game : MonoBehaviour {
 	};
 
 	const int numF = 34;
+	const int numFT = 84;
 
-	Loseta[,] board = new Loseta[2*numF, 2*numF];
+	Loseta[,] board = new Loseta[2*numFT, 2*numFT];
 
 	Jugador[] jugadores = new Jugador[4];
 
@@ -23,7 +24,7 @@ public class Game : MonoBehaviour {
 
 
 	void Start () {
-		Camera.main.transform.position = new Vector3 (numF * 4.52f + 2.26f, numF * 4.54f + 2.27f, -60);
+		Camera.main.transform.position = new Vector3 (numFT * 4.52f + 2.26f, numFT * 4.54f + 2.27f, -60);
 		for (int i = 0; i < 4; ++i) {
 			Jugador jugador = gameObject.AddComponent<Jugador> ();
 			jugador.puntos = 0;
@@ -37,7 +38,6 @@ public class Game : MonoBehaviour {
 		losetasAColocar = new Stack<GameObject> ();
 		int[] aparicionesRestantes = new int[numF];
 		for (int i = 0; i < numF; ++i) aparicionesRestantes[i] = -1;
-		print ("empiezo");
 		while (prueba.Count > 0) {
 			int rand = Random.Range (0, prueba.Count);
 			int selected = prueba [rand];
@@ -46,14 +46,16 @@ public class Game : MonoBehaviour {
 			if (aparicionesRestantes[selected] == -1) {
 				Loseta los = loseta.GetComponent<Loseta> ();
 				aparicionesRestantes[selected] = los.numeroApariciones;
-				print (los.numeroApariciones);
 			}
 			if (--aparicionesRestantes [selected] == 0) prueba.RemoveAt (rand);
+			if (aparicionesRestantes [selected] < 0) {
+				print ("Algoritmo fallido");
+				Debug.Break ();
+			}
 		}
-		print ("hola");
 		print (losetasAColocar.Count);
 		ultimaLoseta = Instantiate (losetasAColocar.Pop());
-		place (ultimaLoseta, numF, numF);
+		place (ultimaLoseta, numFT, numFT);
 	}
 
 
