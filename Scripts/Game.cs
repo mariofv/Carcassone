@@ -124,7 +124,7 @@ public class Game : MonoBehaviour {
 	IEnumerator gameLoop() {
 		for (int i = 0; i < jugadores.Length; ++i) {
 			Jugador jugador = jugadores [i];
-
+			GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), -GlobalVariables.cameraZ)), Quaternion.identity);
 			if (primeraRonda) {
 				primeraRonda = false;
 				GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
