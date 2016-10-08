@@ -20,13 +20,16 @@ public class Loseta : MonoBehaviour {
 
 	public void rotaFicha(int direccionObservada, int direccionDeseada) {
 		int grau = Utils.grau (direccionObservada, direccionDeseada);
-		this.gameObject.transform.Rotate (0, 0, grau);
-		int factor = grau / 90;
+		gameObject.transform.Rotate (0, 0, grau);
+		int factor = (grau / 90);
 		int[] ladosLosetaRotado = new int[5];
+
 		for (int i = 0; i < 4; ++i) {
-			ladosLosetaRotado [i] = ladosLoseta [(i - factor) % 4];	
+			print("Dimension 1: " + i + " indice 2: " + (i - factor) % 4);
+
+			ladosLosetaRotado [i] = ladosLoseta [Utils.abs(i - factor) % 4];	
 		}
-		ladosLosetaRotado [5] = ladosLoseta [5];
+		ladosLosetaRotado [4] = ladosLoseta [4];
 		ladosLoseta = ladosLosetaRotado;
 	
 	

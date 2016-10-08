@@ -12,6 +12,12 @@ public class Utils : MonoBehaviour {
 	void Update () {
 	}
 
+	public static int abs (int x) {
+		if (x >= 0)
+			return x;
+		return -x;
+	}
+
 	public static int grau (int i, int j) {
 		if(i > j) return (i-j)*90;
 		else if (i < j) return (j-i)*(-90);

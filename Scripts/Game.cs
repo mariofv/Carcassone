@@ -18,6 +18,8 @@ public class Game : MonoBehaviour {
 
 	Stack<GameObject> losetasAColocar;
 
+	GameObject ultimaLoseta;
+
 
 
 	void Start () {
@@ -42,24 +44,41 @@ public class Game : MonoBehaviour {
 			losetasAColocar.Push (loseta);
 			if (aparicionesRestantes[selected] == -1) {
 				Loseta los = loseta.GetComponent<Loseta> ();
-				GameObject hola = Instantiate (loseta);
 				aparicionesRestantes[selected] = los.numeroApariciones;
-				Destroy (hola);
 				print (los.numeroApariciones);
 			}
-			if (--aparicionesRestantes [selected] == 0) print ("Hola");
-			prueba.RemoveAt (rand);
+			if (--aparicionesRestantes [selected] == 0) 			prueba.RemoveAt (rand);
+
 		}
 		print (losetasAColocar.Count);
-		place (losetasAColocar.Pop (), numF, numF);
+		ultimaLoseta = Instantiate (losetasAColocar.Pop());
+		place (ultimaLoseta, numF, numF);
+	
+
 	}
+
 
 	int possibleMovement(Loseta origen, Loseta adyacente) {
 		return 0;
 	}
 
+	void pruebaRotar(Loseta loseta) {
+		direcciones[] dir = { direcciones.ARRIBA, direcciones.DERECHA, direcciones.ABAJO, direcciones.IZQUIERDA };
+		foreach (direcciones d in dir) {
+			foreach (direcciones d2 in dir) {
+				print("Holaa amijo estoy rotando desde " + d + " hasta a " + d2);
+				loseta.rotaFicha((int)d,(int)d2);
+				Debug.Break();
+				loseta.rotaFicha((int)d2,(int)d);
+
+			}
+		}
+	
+	}
+
+
 	void place(GameObject loseta, int x, int y) {
-		Instantiate (loseta, new Vector3 (x * 4.52f + 2.26f, y*4.54f + 2.27f, 0), new Quaternion());
+		loseta.transform.position =  new Vector3 (x * 4.52f + 2.26f, y*4.54f + 2.27f, 0);
 	}
 
 	int[] sumX = {0, 1, 0, -1};
@@ -78,6 +97,7 @@ public class Game : MonoBehaviour {
 		}*/
 	}
 
-	/*void Update () {
-	}*/
+	void Update () {
+		pruebaRotar (ultimaLoseta.GetComponent<Loseta>());
+	}
 }
