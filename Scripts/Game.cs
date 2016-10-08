@@ -116,9 +116,7 @@ public class Game : MonoBehaviour {
 			losetaEscogida = false;
 			while (!losetaEscogida) {
 				yield return true;
-				print ("hola");
 			}
-			print (losetaEscogida);
 			bool surrounded = true;
 			for (int j = 0; j < dirs.Length; ++j) {
 				if (board [coordEscogida.Value.x + sumX [j], coordEscogida.Value.y + sumY [j]] == null) surrounded = false;
