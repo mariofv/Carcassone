@@ -7,7 +7,7 @@ public class Game : MonoBehaviour {
 	struct Coord {
 		public int x, y;
 	};
-
+	bool losetaEscogida;
 	const int numF = 34;
 	const int numFT = 84;
 
@@ -21,7 +21,9 @@ public class Game : MonoBehaviour {
 
 	GameObject ultimaLoseta;
 
-
+	direcciones[] dirs = { direcciones.ARRIBA, direcciones.DERECHA, direcciones.ABAJO, direcciones.IZQUIERDA };
+	int[] sumX = {0, 1, 0, -1};
+	int[] sumY = { 1, 0, -1, 0 };
 
 	void Start () {
 		Camera.main.transform.position = new Vector3 (numFT * 4.52f + 2.26f, numFT * 4.54f + 2.27f, GlobalVariables.cameraZ);
@@ -55,17 +57,31 @@ public class Game : MonoBehaviour {
 		}
 		ultimaLoseta = Instantiate (losetasAColocar.Pop());
 		place (ultimaLoseta, numFT, numFT);
+		StartCoroutine ("gameLoop");
 	}
 
 
-	int possibleMovement(Loseta origen, Loseta adyacente) {
-		return 0;
+	LinkedList<int>[] possibleMovement(Loseta origen, Loseta adyacente, Coord cDest) {
+		tipoLoseta[] tiposDest = adyacente.tiposEnLoseta;
+		tipoLoseta[] tiposOr = origen.tiposEnLoseta;
+		LinkedList<int>[] possiblePairs = new LinkedList<int>[dirs.Length];
+		foreach (direcciones dDest in dirs) {
+			if (board [cDest.x + sumX [(int)dDest], cDest.y + sumY [(int)dDest]] == null) {
+				tipoLoseta tipoDest = tiposDest [adyacente.ladosLoseta [(int)dDest]];
+				foreach (direcciones dOr in dirs) {
+					tipoLoseta tipoOr = tiposOr [origen.ladosLoseta [(int)dOr]];
+					if (tipoDest == tipoOr) {
+						possiblePairs[(int)dDest].AddLast ((int)dOr);
+					}
+				}
+			}
+		}
+		return possiblePairs;
 	}
 
 	void pruebaRotar(Loseta loseta) {
-		direcciones[] dir = { direcciones.ARRIBA, direcciones.DERECHA, direcciones.ABAJO, direcciones.IZQUIERDA };
-		foreach (direcciones d in dir) {
-			foreach (direcciones d2 in dir) {
+		foreach (direcciones d in dirs) {
+			foreach (direcciones d2 in dirs) {
 				print("Holaa amijo estoy rotando desde " + d + " hasta a " + d2);
 				loseta.rotaFicha((int)d,(int)d2);
 				loseta.rotaFicha((int)d2,(int)d);
@@ -74,25 +90,20 @@ public class Game : MonoBehaviour {
 		}
 	
 	}
-
-
+		
 	void place(GameObject loseta, int x, int y) {
 		loseta.transform.position =  new Vector3 (x * 4.52f + 2.26f, y*4.54f + 2.27f, 0);
 	}
 
-	int[] sumX = {0, 1, 0, -1};
-	int[] sumY = { 1, 0, -1, 0 };
-
 	void gameLoop() {
 		for (int i = 0; i < jugadores.Length; ++i) {
 			Jugador jugador = jugadores [i];
-
 			foreach (Coord pos in posiblesLosetas) {
-				int dir;
 				GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), 50)), Quaternion.identity);
-				if ((dir = possibleMovement (loseta.GetComponent<Loseta> (), board [pos.x, pos.y])) != -1) {
-					place (loseta, pos.x + sumX[dir], pos.y + sumY[dir]);
-				}
+				LinkedList<int>[]dirs = possibleMovement (loseta.GetComponent<Loseta> (), board [pos.x, pos.y], pos);
+				//TODO: Instanciar highlight en coordenadas determinadas por dirs
+				losetaEscogida = false;
+				while (!losetaEscogida);
 			}
 		}
 	}

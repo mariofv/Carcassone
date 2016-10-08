@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Loseta1_1 : Loseta {
-
+	
 	// Use this for initialization
 	void Start () {
 		numeroApariciones = 2;
