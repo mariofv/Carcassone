@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
-
+	
 	struct Coord {
 		public int x, y;
 	};
