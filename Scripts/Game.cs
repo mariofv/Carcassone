@@ -16,12 +16,13 @@ public class Game : MonoBehaviour {
 
 	Stack<GameObject> losetasAColocar;
 
-	const int numF = 10;
+	const int numF = 34;
 
 	void Start () {
 		for (int i = 0; i < 4; ++i) {
 			Jugador jugador = gameObject.AddComponent<Jugador> ();
 			jugador.puntos = 0;
+			jugador.subditos = 8;
 			jugadores [i] = jugador;
 		}
 		List<int> prueba = new List<int>(numF);
@@ -32,8 +33,22 @@ public class Game : MonoBehaviour {
 		while (prueba.Count > 0) {
 			int rand = Random.Range (0, prueba.Count);
 			int selected = prueba [rand];
-			prueba.Remove (selected);
+			GameObject loseta = Resources.Load<GameObject> ("Prefabs/Losetas/L" + selected);
+			losetasAColocar.Push (loseta);
+			prueba.RemoveAt (rand);
 		}
+		place (losetasAColocar.Pop (), 0, 0);
+		place (losetasAColocar.Pop (), 0, 1);
+		place (losetasAColocar.Pop (), 0, 2);
+		place (losetasAColocar.Pop (), 0, 3);
+		place (losetasAColocar.Pop (), 1, 3);
+		place (losetasAColocar.Pop (), 1, 4);
+		place (losetasAColocar.Pop (), 2, 0);
+		place (losetasAColocar.Pop (), 0, 5);
+		place (losetasAColocar.Pop (), 0, 6);
+		place (losetasAColocar.Pop (), 1, 7);
+		place (losetasAColocar.Pop (), 2, 0);
+		place (losetasAColocar.Pop (), 3, 0);
 	}
 
 	int possibleMovement(Loseta origen, Loseta adyacente) {
@@ -41,12 +56,14 @@ public class Game : MonoBehaviour {
 	}
 
 	void place(GameObject loseta, int x, int y) {
+		Instantiate (loseta, new Vector3 (x * 4.52f + 2.26f, y*4.54f + 2.27f, 0), new Quaternion());
+		//loseta.transform.position = new Vector2 (x * 2.26f, y * 2.27f);
 	}
 
 	int[] sumX = {0, 1, 0, -1};
 	int[] sumY = { 1, 0, -1, 0 };
 
-	void Update () {
+	/*void Update () {
 		for (int i = 0; i < jugadores.Length; ++i) {
 			Jugador jugador = jugadores [i];
 			GameObject loseta = losetasAColocar.Pop ();
@@ -57,5 +74,5 @@ public class Game : MonoBehaviour {
 				}
 			}
 		}
-	}
+	}*/
 }
