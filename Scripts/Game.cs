@@ -21,7 +21,7 @@ public class Game : MonoBehaviour {
 
 	Jugador[] jugadores = new Jugador[4];
 
-	LinkedList<Coord> posiblesLosetas;
+	bool primeraRonda = true;
 
 	Stack<GameObject> losetasAColocar;
 
@@ -67,28 +67,6 @@ public class Game : MonoBehaviour {
 		StartCoroutine (coroutine);
 	}
 
-
-	bool[,] possibleMovement(Loseta origen, Loseta adyacente, Coord cDest) {
-		tipoLoseta[] tiposDest = adyacente.tiposEnLoseta;
-		tipoLoseta[] tiposOr = origen.tiposEnLoseta;
-		bool[,] possiblePairs = new bool[dirs.Length, dirs.Length];
-		for (int i = 0; i < dirs.Length; ++i)
-			for (int j = 0; j < dirs.Length; ++j)
-				possiblePairs [i, j] = false;
-		foreach (direcciones dDest in dirs) {
-			if (board [cDest.x + sumX [(int)dDest], cDest.y + sumY [(int)dDest]] == null) {
-				tipoLoseta tipoDest = tiposDest [adyacente.ladosLoseta [(int)dDest]];
-				foreach (direcciones dOr in dirs) {
-					tipoLoseta tipoOr = tiposOr [origen.ladosLoseta [(int)dOr]];
-					if (tipoDest == tipoOr) {
-						possiblePairs [(int)dDest, (int)dOr] = true;
-					}
-				}
-			}
-		}
-		return possiblePairs;
-	}
-
 	bool[] posicionPosible(Loseta losetaAColocar, Coord coord) {
 		tipoLoseta[] tiposLoseta = losetaAColocar.tiposEnLoseta;
 		bool[] rot = new bool[4];
@@ -113,16 +91,6 @@ public class Game : MonoBehaviour {
 		}
 		return rot;
 	}
-
-	void pruebaRotar(Loseta loseta) {
-		foreach (direcciones d in dirs) {
-			foreach (direcciones d2 in dirs) {
-				print("Holaa amijo estoy rotando desde " + d + " hasta a " + d2);
-				loseta.rotaFicha((int)d,(int)d2);
-				loseta.rotaFicha((int)d2,(int)d);
-			}
-		}
-	}
 		
 	void place(GameObject loseta, int x, int y) {
 		loseta.transform.position =  new Vector3 (x * 4.52f + 2.26f, y*4.54f + 2.27f, 0);
@@ -132,13 +100,14 @@ public class Game : MonoBehaviour {
 		for (int i = 0; i < jugadores.Length; ++i) {
 			Jugador jugador = jugadores [i];
 			GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), -GlobalVariables.cameraZ)), Quaternion.identity);
-			LinkedListNode<Coord> coordEscogida = null;
-			if (posiblesLosetas == null) {
-				posiblesLosetas = new LinkedList<Coord> ();
-				Coord ini = new Coord ();
-				ini.x = ini.y = numFT;
-				posiblesLosetas.AddLast (ini);
-				place (loseta, numFT, numFT);
+			if (primeraRonda) {
+				primeraRonda = false;
+				GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
+				LosetaHightligth losetaHighlight = highlight.GetComponent<LosetaHightligth> ();
+				losetaHighlight.validRot = new bool[4];
+				for (int j = 0; j < 4; ++j) losetaHighlight.validRot[j] = true;	
+				GameObject instance = Instantiate (highlight);
+				place (instance, numFT, numFT);
 			} 
 			else {
 				for (int j = 0; j < sizeX; ++j) {
@@ -159,13 +128,6 @@ public class Game : MonoBehaviour {
 			losetaEscogida = false;
 			while (!losetaEscogida) {
 				yield return true;
-			}
-			bool surrounded = true;
-			for (int j = 0; j < dirs.Length; ++j) {
-				if (board [coordEscogida.Value.x + sumX [j], coordEscogida.Value.y + sumY [j]] == null) surrounded = false;
-			}
-			if (surrounded) {
-				posiblesLosetas.Remove (coordEscogida);
 			}
 		}
 	}
