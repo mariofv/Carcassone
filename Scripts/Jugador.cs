@@ -6,7 +6,7 @@ public class Jugador : MonoBehaviour {
 	public int puntos;
 	public int subditos;
 	public string nombre;
-	
+	public int indice;
 	// Use this for initialization
 	void Start () {
 		puntos = 0;

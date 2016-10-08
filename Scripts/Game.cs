@@ -19,7 +19,7 @@ public class Game : MonoBehaviour {
 
 	Loseta[,] board = new Loseta[sizeX, sizeY];
 
-	Jugador[] jugadores = new Jugador[4];
+	public static Jugador[] jugadores = new Jugador[4];
 
 	bool primeraRonda = true;
 
@@ -96,10 +96,35 @@ public class Game : MonoBehaviour {
 		loseta.transform.position =  new Vector3 (x * 4.52f + 2.26f, y*4.54f + 2.27f, 0);
 	}
 
+	bool[,] visitado = new bool[sizeX, sizeY];
+	int[] subditosJugador = new int[4];
+	int ciudadEscudo;
+
+	bool analisis(Coord coord, tipoLoseta tipo, direcciones dirAnterior) {
+		Loseta loseta = board [coord.x, coord.y];
+		if (loseta == null) return false;
+		int lado = loseta.ladosLoseta [Utils.opuesto((int)dirAnterior)];
+		tipoLoseta[] tipos = loseta.tiposEnLoseta;
+		foreach (direcciones dir in dirs) {
+			Coord next = new Coord(coord.x + sumX[(int)dir], coord.y + sumY[(int)dir]);
+				if (!visitado[next.x, next.y] &&
+				tipos[loseta.ladosLoseta[(int)dir]] == tipo && 
+				loseta.ladosLoseta[(int)dir] != lado) {
+					if (!analisis(next, tipo, dir)) return false;
+				}
+		}
+		if (loseta.tipoSubdito == tipo) {
+			++subditosJugador [loseta.subdito.jugador.indice];
+		}
+		if (tipo == tipoLoseta.CIUDAD) {
+		}
+		return true;
+	}
+
 	IEnumerator gameLoop() {
 		for (int i = 0; i < jugadores.Length; ++i) {
 			Jugador jugador = jugadores [i];
-			GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), -GlobalVariables.cameraZ)), Quaternion.identity);
+
 			if (primeraRonda) {
 				primeraRonda = false;
 				GameObject highlight = Resources.Load<GameObject> ("Prefabs/LosetaHighlitgh");
@@ -128,6 +153,25 @@ public class Game : MonoBehaviour {
 			losetaEscogida = false;
 			while (!losetaEscogida) {
 				yield return true;
+			}
+
+			Coord selected = new Coord (0, 0);
+			tipoLoseta tipoSeleccionado = tipoLoseta.CIUDAD;
+			Loseta losetaSelected = board [selected.x, selected.y];
+			bool[] visited = new bool[losetaSelected.tiposEnLoseta.Length];
+			for (int j = 0; j < visited.Length; ++i) visited[i] = false;
+			foreach (direcciones dir in dirs) {
+				if (losetaSelected.tiposEnLoseta [losetaSelected.ladosLoseta [(int)dir]] == tipoSeleccionado &&
+				    !visited [losetaSelected.ladosLoseta [(int)dir]]) {
+					visited[losetaSelected.ladosLoseta[(int)dir]] = true;
+					for (int j = 0; j < sizeX; ++j)
+						for (int k = 0; k < sizeY; ++k)
+							visitado [j, k] = false;
+					for (int j = 0; j < subditosJugador.Length; ++j)
+						subditosJugador [j] = 0;
+					ciudadEscudo = 0;
+					analisis (new Coord (selected.x + sumX [(int)dir], selected.y + sumY [(int)dir]), tipoSeleccionado, dir);
+				}
 			}
 		}
 	}

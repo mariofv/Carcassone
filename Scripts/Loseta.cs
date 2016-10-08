@@ -10,7 +10,7 @@ public class Loseta : MonoBehaviour {
 	//Donde esta situado el subdito, -1 indica sin subdito.
 	public tipoLoseta tipoSubdito;
 	//El subdito :D
-	Subdito subdito;
+	public Subdito subdito;
 	//Boton Rotar
 	BotonGirar botonRotar;
 
