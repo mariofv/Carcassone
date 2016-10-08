@@ -21,7 +21,6 @@ public class GameM : MonoBehaviour {
 
 
 	void Start () {
-		print ("Hola");
 		Camera.main.transform.position = new Vector3 (numF * 4.52f + 2.26f, numF * 4.54f + 2.27f, -60);
 		for (int i = 0; i < 4; ++i) {
 			Jugador jugador = gameObject.AddComponent<Jugador> ();
@@ -34,18 +33,18 @@ public class GameM : MonoBehaviour {
 			prueba.Add(i);
 		}
 		losetasAColocar = new Stack<GameObject> ();
-		int[] aparicionesRestantes = new int[numF];
-		for (int i = 0; i < numF; ++i) aparicionesRestantes[i] = -1;
+		//int[] aparicionesRestantes = new int[numF];
+		//for (int i = 0; i < numF; ++i) aparicionesRestantes[i] = -1;
 		while (prueba.Count > 0) {
 			int rand = Random.Range (0, prueba.Count);
 			int selected = prueba [rand];
 			GameObject loseta = Resources.Load<GameObject> ("Prefabs/Losetas/L" + selected);
 			losetasAColocar.Push (loseta);
-			if (aparicionesRestantes[selected] == -1) {
+			/*if (aparicionesRestantes[selected] == -1) {
 				Loseta los = loseta.GetComponent<Loseta> ();
 				aparicionesRestantes[selected] = los.numeroApariciones;
 			}
-			if (--aparicionesRestantes[selected] == 0) prueba.RemoveAt (rand);
+			if (--aparicionesRestantes[selected] == 0)*/ prueba.RemoveAt (rand);
 		}
 		print (losetasAColocar.Count);
 		place (losetasAColocar.Pop (), numF, numF);

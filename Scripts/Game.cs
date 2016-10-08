@@ -42,9 +42,13 @@ public class Game : MonoBehaviour {
 			losetasAColocar.Push (loseta);
 			if (aparicionesRestantes[selected] == -1) {
 				Loseta los = loseta.GetComponent<Loseta> ();
+				GameObject hola = Instantiate (loseta);
 				aparicionesRestantes[selected] = los.numeroApariciones;
+				Destroy (hola);
+				print (los.numeroApariciones);
 			}
-			if (--aparicionesRestantes[selected] == 0) prueba.RemoveAt (rand);
+			if (--aparicionesRestantes [selected] == 0) print ("Hola");
+			prueba.RemoveAt (rand);
 		}
 		print (losetasAColocar.Count);
 		place (losetasAColocar.Pop (), numF, numF);
