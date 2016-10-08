@@ -26,6 +26,7 @@ public class Loseta : MonoBehaviour {
 	public void ligaBotonRotar() {
 		botonRotar = new BotonGirar();
 		botonRotar.transform.parent = gameObject.transform;
+		botonRotar.losetaLigada = gameObject.GetComponent<Loseta>();
 	
 	}
 
@@ -45,6 +46,7 @@ public class Loseta : MonoBehaviour {
 	
 	
 	}
+
 
 
 	
