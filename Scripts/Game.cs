@@ -11,7 +11,7 @@ public class Game : MonoBehaviour {
 			this.y = y;
 		}
 	};
-	bool losetaEscogida;
+	public static bool losetaEscogida;
 	const int numF = 34;
 	const int numFT = 84;
 	const int sizeX = numFT * 2;

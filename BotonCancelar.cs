@@ -1,12 +1,18 @@
-﻿using System;
+﻿using UnityEngine;
+using System.Collections;
 
-namespace AssemblyCSharp
-{
-	public class BotonCancelar
-	{
-		public BotonCancelar ()
-		{
-		}
+public class BotonCancelar:Boton {
+	public LosetaHightligth losetaPadre;
+	// Use this for initialization
+	void  OnMouseUp() {
+
+		losetaPadre.Cancelar ();
+
 	}
-}
 
+	public void SetLosetaPadre(LosetaHightligth loseta) {
+		losetaPadre = loseta;
+	}
+
+
+}
