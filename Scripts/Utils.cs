@@ -10,9 +10,11 @@ public class Utils : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
-	int public grau (int i, int j){
-		if(i j) return (i-j)*90;
-		else return (j-i)*(-90);
+
+	public int grau (int i, int j) {
+		if(i > j) return (i-j)*90;
+		else if (i < j) return (j-i)*(-90);
+		return 0;
+	}
 }
