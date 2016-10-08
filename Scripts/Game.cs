@@ -47,14 +47,11 @@ public class Game : MonoBehaviour {
 				aparicionesRestantes[selected] = los.numeroApariciones;
 				print (los.numeroApariciones);
 			}
-			if (--aparicionesRestantes [selected] == 0) 			prueba.RemoveAt (rand);
-
+			if (--aparicionesRestantes [selected] == 0) prueba.RemoveAt (rand);
 		}
 		print (losetasAColocar.Count);
 		ultimaLoseta = Instantiate (losetasAColocar.Pop());
 		place (ultimaLoseta, numF, numF);
-	
-
 	}
 
 
