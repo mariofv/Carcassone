@@ -37,6 +37,7 @@ public class Game : MonoBehaviour {
 		losetasAColocar = new Stack<GameObject> ();
 		int[] aparicionesRestantes = new int[numF];
 		for (int i = 0; i < numF; ++i) aparicionesRestantes[i] = -1;
+		print ("empiezo");
 		while (prueba.Count > 0) {
 			int rand = Random.Range (0, prueba.Count);
 			int selected = prueba [rand];
@@ -49,6 +50,7 @@ public class Game : MonoBehaviour {
 			}
 			if (--aparicionesRestantes [selected] == 0) prueba.RemoveAt (rand);
 		}
+		print ("hola");
 		print (losetasAColocar.Count);
 		ultimaLoseta = Instantiate (losetasAColocar.Pop());
 		place (ultimaLoseta, numF, numF);
@@ -65,8 +67,6 @@ public class Game : MonoBehaviour {
 			foreach (direcciones d2 in dir) {
 				print("Holaa amijo estoy rotando desde " + d + " hasta a " + d2);
 				loseta.rotaFicha((int)d,(int)d2);
-				while (true)
-					;
 				loseta.rotaFicha((int)d2,(int)d);
 
 			}
@@ -94,8 +94,8 @@ public class Game : MonoBehaviour {
 			}
 		}*/
 	}
+		
 
 	void Update () {
-		pruebaRotar (ultimaLoseta.GetComponent<Loseta>());
 	}
 }
