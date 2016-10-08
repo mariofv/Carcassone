@@ -24,7 +24,7 @@ public class Game : MonoBehaviour {
 
 
 	void Start () {
-		Camera.main.transform.position = new Vector3 (numFT * 4.52f + 2.26f, numFT * 4.54f + 2.27f, -60);
+		Camera.main.transform.position = new Vector3 (numFT * 4.52f + 2.26f, numFT * 4.54f + 2.27f, GlobalVariables.cameraZ);
 		for (int i = 0; i < 4; ++i) {
 			Jugador jugador = gameObject.AddComponent<Jugador> ();
 			jugador.puntos = 0;
@@ -53,7 +53,6 @@ public class Game : MonoBehaviour {
 				Debug.Break ();
 			}
 		}
-		print (losetasAColocar.Count);
 		ultimaLoseta = Instantiate (losetasAColocar.Pop());
 		place (ultimaLoseta, numFT, numFT);
 	}
@@ -85,16 +84,17 @@ public class Game : MonoBehaviour {
 	int[] sumY = { 1, 0, -1, 0 };
 
 	void gameLoop() {
-		/*for (int i = 0; i < jugadores.Length; ++i) {
+		for (int i = 0; i < jugadores.Length; ++i) {
 			Jugador jugador = jugadores [i];
-			GameObject loseta = losetasAColocar.Pop ();
+
 			foreach (Coord pos in posiblesLosetas) {
 				int dir;
+				GameObject loseta = (GameObject)Instantiate (losetasAColocar.Pop (), Camera.main.ScreenToWorldPoint(new Vector3 (Camera.main.pixelWidth*0.5f, Camera.main.pixelHeight*(1f/10f), 50)), Quaternion.identity);
 				if ((dir = possibleMovement (loseta.GetComponent<Loseta> (), board [pos.x, pos.y])) != -1) {
 					place (loseta, pos.x + sumX[dir], pos.y + sumY[dir]);
 				}
 			}
-		}*/
+		}
 	}
 		
 

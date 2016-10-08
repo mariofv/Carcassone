@@ -7,5 +7,10 @@ public enum direcciones {ARRIBA,DERECHA,ABAJO,IZQUIERDA};
 
 
 public class GlobalVariables : MonoBehaviour {
-
+	public static int cameraZ {
+		get {
+			return pcameraZ;
+		}
+	}
+	private static int pcameraZ = -50;
 }
