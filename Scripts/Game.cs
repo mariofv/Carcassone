@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
-
+	/*
 	struct Coord {
 		public int x, y;
 	};
-
+*/
 	const int numF = 34;
 	const int numFT = 84;
 
@@ -15,7 +15,7 @@ public class Game : MonoBehaviour {
 
 	Jugador[] jugadores = new Jugador[4];
 
-	LinkedList<Coord> posiblesLosetas;
+	//LinkedList<Coord> posiblesLosetas;
 
 	Stack<GameObject> losetasAColocar;
 
