@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LosetaHightligth : Loseta {
+public class LosetaHightligth : MonoBehaviour {
 
-	// Use this for initialization
+	public bool[] validRot;
+
 	void Start () {
 		
 	}
