@@ -98,6 +98,7 @@ public class Game : MonoBehaviour {
 
 	bool[,] visitado = new bool[sizeX, sizeY];
 	int[] subditosJugador = new int[4];
+	int puntuacion;
 	int ciudadEscudo;
 
 	bool analisis(Coord coord, tipoLoseta tipo, direcciones dirAnterior) {
@@ -116,7 +117,10 @@ public class Game : MonoBehaviour {
 		if (loseta.tipoSubdito == tipo) {
 			++subditosJugador [loseta.subdito.jugador.indice];
 		}
-		if (tipo == tipoLoseta.CIUDAD) {
+		if (tipo == tipoLoseta.CAMINO) ++puntuacion;
+		else {
+			puntuacion += 2;
+			//TODO: si es escudo contar más
 		}
 		return true;
 	}
@@ -170,7 +174,23 @@ public class Game : MonoBehaviour {
 					for (int j = 0; j < subditosJugador.Length; ++j)
 						subditosJugador [j] = 0;
 					ciudadEscudo = 0;
-					analisis (new Coord (selected.x + sumX [(int)dir], selected.y + sumY [(int)dir]), tipoSeleccionado, dir);
+					if (analisis (new Coord (selected.x + sumX [(int)dir], selected.y + sumY [(int)dir]), tipoSeleccionado, dir)) {
+						int max = -1;
+						LinkedList<int> maximos;
+						for (int j = 0; j < 4; ++j) {
+							if (subditosJugador [j] > subditosJugador [max]) {
+								max = j;
+								maximos = new LinkedList<int> ();
+								maximos.AddLast (max);
+							} 
+							else if (subditosJugador [j] == subditosJugador [max]) {
+								maximos.AddLast (max);
+							}
+						}
+						foreach (int player in maximos) {
+							jugadores [player].puntos += puntuacion;
+						}
+					}
 				}
 			}
 		}
